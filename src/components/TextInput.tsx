@@ -26,28 +26,37 @@ const countWords = (text) => {
   //   };
 };
 
-
 // Function to count characters, including spaces
 const countCharacters = (text) => {
   return text.length;
+};
+
+const countParagraphs = (text) => {
+  return text.split(/\n\s*/).filter((paragraph) => paragraph.trim()).length;
 };
 
 // Function to count characters excluding spaces
 const countCharactersWithoutSpaces = (text) => {
   return text.replace(/\s+/g, "").length;
 
+  //   does not create a new string so is more memory efficient but due to the loop the performance would roughly be the same as the regex approach
+  // const countCharactersWithoutSpaces = (text) => {
+  //     let count = 0;
+  //     for (let i = 0; i < text.length; i++) {
+  //       if (!/\s/.test(text[i])) {
+  //         count++;
+  //       }
+  //     }
+  //     return count;
+  //   };
+};
 
-//   does not create a new string so is more memory efficient but due to the loop the performance would roughly be the same as the regex approach
-// const countCharactersWithoutSpaces = (text) => {
-//     let count = 0;
-//     for (let i = 0; i < text.length; i++) {
-//       if (!/\s/.test(text[i])) {
-//         count++;
-//       }
-//     }
-//     return count;
-//   };
-  
+const findLongestWord = (text) => {
+  return text
+    .match(/\b\w+\b/g) // Match all words
+    .reduce((longest, current) => {
+      return current.length > longest.length ? current : longest;
+    }, "");
 };
 
 // Function to count paragraphs in the text
@@ -64,11 +73,15 @@ function TextInput() {
     const wordCount = countWords(text);
     const characterCount = countCharacters(text);
     const characterCountNoSpaces = countCharactersWithoutSpaces(text);
+    const paragraphCount = countParagraphs(text);
+    const longestWord = findLongestWord(text);
 
     setAnalysis({
       wordCount,
       characterCount,
       characterCountNoSpaces,
+      paragraphCount,
+      longestWord,
     });
   };
 
@@ -103,6 +116,12 @@ function TextInput() {
           <p>
             <strong>Character Count (without spaces):</strong>{" "}
             {analysis.characterCountNoSpaces}
+          </p>
+          <p>
+            <strong>Paragraph count:</strong> {analysis.paragraphCount}
+          </p>
+          <p>
+            <strong>Longest word:</strong> {analysis.longestWord}
           </p>
         </div>
       )}
