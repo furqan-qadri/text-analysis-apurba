@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Sentiment from "sentiment";
 
 // Function to count words in the text
 const countWords = (text) => {
@@ -81,10 +82,24 @@ const findMostFrequentWord = (text) => {
     }
   });
 
-  return mostFrequentWord;
+  return [mostFrequentWord, maxCount];
 };
 
-// Function to count paragraphs in the text
+const analyzeSentiment = (text) => {
+  const sentiment = new Sentiment();
+  const result = sentiment.analyze(text);
+
+  let sentimentLabel = "Neutral";
+  console.log(result);
+
+  if (result.score > 0) {
+    sentimentLabel = "Positive";
+  } else if (result.score < 0) {
+    sentimentLabel = "Negative";
+  }
+
+  return sentimentLabel;
+};
 
 function TextInput() {
   const [text, setText] = useState("");
@@ -102,6 +117,7 @@ function TextInput() {
     const longestWord = findLongestWord(text);
     const mostFrequentWord = findMostFrequentWord(text);
     const sentenceCount = countSentences(text);
+    const sentiment = analyzeSentiment(text);
 
     setAnalysis({
       wordCount,
@@ -111,6 +127,7 @@ function TextInput() {
       longestWord,
       mostFrequentWord,
       sentenceCount,
+      sentiment,
     });
   };
 
@@ -147,16 +164,20 @@ function TextInput() {
             {analysis.characterCountNoSpaces}
           </p>
           <p>
+            <strong>Sentence count:</strong> {analysis.sentenceCount}
+          </p>
+          <p>
             <strong>Paragraph count:</strong> {analysis.paragraphCount}
           </p>
           <p>
             <strong>Longest word:</strong> {analysis.longestWord}
           </p>
           <p>
-            <strong>Most frequent word:</strong> {analysis.mostFrequentWord}
+            <strong>Most frequent word:</strong> {analysis.mostFrequentWord[0]}
+            {}" "{analysis.mostFrequentWord[1]} times
           </p>
           <p>
-            <strong>Sentence count:</strong> {analysis.sentenceCount}
+            <strong>Sentiment</strong> {analysis.sentiment}
           </p>
         </div>
       )}
