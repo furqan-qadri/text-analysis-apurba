@@ -4,14 +4,20 @@ import TextInput from "./components/TextInput";
 function App() {
   return (
     <>
-      <div className="w-full bg-slate-200">
-        Apurba tech
-        <img className="w-16 h-10 " src="apurba_logo.png" alt="apurba_logo" />
+      <div
+        className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 
+      bg-red-200
+      "
+      >
         <Header />
-        <TextInput />
+        <div className="w-full">
+          <TextInput />
+        </div>
       </div>
     </>
   );
 }
 
 export default App;
+
+// [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]
