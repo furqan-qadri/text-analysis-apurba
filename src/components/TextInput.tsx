@@ -59,6 +59,25 @@ const findLongestWord = (text) => {
     }, "");
 };
 
+const findMostFrequentWord = (text) => {
+  const words = text.toLowerCase().match(/\b\w+\b/g);
+  const wordCounts = new Map();
+  let mostFrequentWord = "";
+  let maxCount = 0;
+
+  words.forEach((word) => {
+    const count = (wordCounts.get(word) || 0) + 1;
+    wordCounts.set(word, count);
+
+    if (count > maxCount) {
+      mostFrequentWord = word;
+      maxCount = count;
+    }
+  });
+
+  return mostFrequentWord;
+};
+
 // Function to count paragraphs in the text
 
 function TextInput() {
@@ -75,6 +94,7 @@ function TextInput() {
     const characterCountNoSpaces = countCharactersWithoutSpaces(text);
     const paragraphCount = countParagraphs(text);
     const longestWord = findLongestWord(text);
+    const mostFrequentWord = findMostFrequentWord(text);
 
     setAnalysis({
       wordCount,
@@ -82,6 +102,7 @@ function TextInput() {
       characterCountNoSpaces,
       paragraphCount,
       longestWord,
+      mostFrequentWord,
     });
   };
 
@@ -122,6 +143,9 @@ function TextInput() {
           </p>
           <p>
             <strong>Longest word:</strong> {analysis.longestWord}
+          </p>
+          <p>
+            <strong>Most frequent word:</strong> {analysis.mostFrequentWord}
           </p>
         </div>
       )}
