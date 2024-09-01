@@ -2,11 +2,30 @@ import { useState } from "react";
 
 // Function to count words in the text
 const countWords = (text) => {
-  return text
-    .trim()
-    .split(/\s+/)
-    .filter((word) => word).length;
+  let count = 0;
+  let inWord = false;
+
+  for (let i = 0; i < text.length; i++) {
+    if (/\S/.test(text[i])) {
+      // Any non-whitespace character
+      if (!inWord) {
+        count++;
+        inWord = true;
+      }
+    } else {
+      inWord = false;
+    }
+  }
+
+  return count;
+
+  //  short regex approach for better readability. suitable for not very large texts
+  // const countWords = (text) => {
+  //     const matches = text.match(/\b\w+\b/g);
+  //     return matches ? matches.length : 0;
+  //   };
 };
+
 
 // Function to count characters, including spaces
 const countCharacters = (text) => {
@@ -16,6 +35,19 @@ const countCharacters = (text) => {
 // Function to count characters excluding spaces
 const countCharactersWithoutSpaces = (text) => {
   return text.replace(/\s+/g, "").length;
+
+
+//   does not create a new string so is more memory efficient but due to the loop the performance would roughly be the same as the regex approach
+// const countCharactersWithoutSpaces = (text) => {
+//     let count = 0;
+//     for (let i = 0; i < text.length; i++) {
+//       if (!/\s/.test(text[i])) {
+//         count++;
+//       }
+//     }
+//     return count;
+//   };
+  
 };
 
 // Function to count paragraphs in the text
