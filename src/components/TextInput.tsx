@@ -31,6 +31,12 @@ const countCharacters = (text) => {
   return text.length;
 };
 
+const countSentences = (text) => {
+  // Split text by sentence-ending punctuation followed by a space or end of string
+  const sentences = text.split(/(?<=[.!?])\s+/);
+  return sentences.filter((sentence) => sentence.trim().length > 0).length;
+};
+
 const countParagraphs = (text) => {
   return text.split(/\n\s*/).filter((paragraph) => paragraph.trim()).length;
 };
@@ -95,6 +101,7 @@ function TextInput() {
     const paragraphCount = countParagraphs(text);
     const longestWord = findLongestWord(text);
     const mostFrequentWord = findMostFrequentWord(text);
+    const sentenceCount = countSentences(text);
 
     setAnalysis({
       wordCount,
@@ -103,6 +110,7 @@ function TextInput() {
       paragraphCount,
       longestWord,
       mostFrequentWord,
+      sentenceCount,
     });
   };
 
@@ -146,6 +154,9 @@ function TextInput() {
           </p>
           <p>
             <strong>Most frequent word:</strong> {analysis.mostFrequentWord}
+          </p>
+          <p>
+            <strong>Sentence count:</strong> {analysis.sentenceCount}
           </p>
         </div>
       )}
