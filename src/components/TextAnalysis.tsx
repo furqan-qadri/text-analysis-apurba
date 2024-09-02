@@ -11,7 +11,6 @@ import {
   analyzeSentiment,
 } from "../utils/analysisFunctions";
 import AnalysisResult from "./Analysis/AnalysisResult";
-
 function TextAnalysis() {
   const [text, setText] = useState<string>("");
   const [analysis, setAnalysis] = useState<AnalysisResultTypes | null>(null);

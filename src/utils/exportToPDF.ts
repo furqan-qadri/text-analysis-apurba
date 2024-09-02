@@ -1,8 +1,8 @@
 // src/utils/exportToPDF.ts
 import jsPDF from "jspdf";
-import { AnalysisResult } from "./types";
+import { AnalysisResultTypes } from "./types";
 
-export const exportToPDF = (text: string, analysis: AnalysisResult) => {
+export const exportToPDF = (text: string, analysis: AnalysisResultTypes) => {
   const doc = new jsPDF();
 
   doc.setFontSize(18);

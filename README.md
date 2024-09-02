@@ -1,50 +1,64 @@
-# React + TypeScript + Vite
+# Text Analysis Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Deployed Project**: [https://text-analysis-apurba.vercel.app/](https://text-analysis-apurba.vercel.app/)
 
-Currently, two official plugins are available:
+## 📝 Brief Description
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The Text Analysis Application developed for Apurba is a powerful tool designed to analyze text by providing key metrics such as word count, character count, sentence count, and more. Whether you're working on a research paper, writing an article, or simply curious about the content of your text, this application provides instant insights with a sleek and user-friendly interface. Additionally, the application offers an option to export the analysis results to a PDF file for easy sharing and record-keeping.
 
-## Expanding the ESLint configuration
+## 📸 Screenshots
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Desktop View
+![Desktop Screenshot](link-to-desktop-screenshot) <!-- Replace this with the actual image link -->
 
-- Configure the top-level `parserOptions` property like this:
+### Mobile View
+![Mobile Screenshot](link-to-mobile-screenshot) <!-- Replace this with the actual image link -->
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## 🚀 How to Run Locally
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Using npm
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/text-analysis-app.git
+   cd text-analysis-app
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+2. **Install dependencies:**
+   ```bash
+   npm install
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+
+4. **Open your browser and navigate to:**
+   ```bash
+   http://localhost:5173
+
+## ⛴️ Using Docker
+
+
+1. **Build the image**
+   ```bash
+   docker build -t apurba-text-analysis .  
+
+2. **Run the Docker container:**
+   ```bash
+   docker run -p 8080:80 text-analysis-apurba
+
+4. **Open your browser and navigate to:**
+   ```bash
+   http://localhost:8080
+
+
+## 🛠️ Techniques Used
+
+React + TypeScript: The application is built using React, leveraging TypeScript for type safety and code maintainability.
+
+Vite: The project uses Vite for a fast and optimized development experience.
+
+Tailwind CSS: Tailwind CSS is used to create a responsive, modern, and visually appealing design.
+
+Playwright for Testing: End-to-end tests are implemented using Playwright to ensure the reliability of core features.
+
+Docker: The application is containerized using Docker, making it easy to deploy and run in any environment.
