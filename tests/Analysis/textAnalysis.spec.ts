@@ -14,14 +14,14 @@ test("should correctly analyze the input text and display the results", async ({
     React adheres to the declarative programming paradigm.[11]: 76  Developers design views for each state of an application, and React updates and renders components when data changes. This is in contrast with imperative programming.[12]
 
     React code is made of entities called components.[11]: 10–12  These components are modular and reusable.[11]: 70  React applications typically consist of many layers of components. The components are rendered to a root element in the DOM using the React DOM library. When rendering a component, values are passed between components through props (short for "properties"). Values internal to a component are called its state.[13]
-  `; 
+  `;
   await page.fill('textarea[placeholder="Type or paste text here"]', dummyText);
 
   await page.click('button:has-text("Analyse")');
 
   // Verify the results using the data-testid attribute
   const results = [
-    { name: "Word Count", count: "212" },
+    { name: "Words", count: "212" },
     { name: "Characters (with space)", count: "1456" },
     { name: "Characters (without space)", count: "1224" },
     { name: "Sentences", count: "9" },

@@ -1,4 +1,3 @@
-// src/utils/analysisFunctions.ts
 import Sentiment from "sentiment";
 
 export const countWords = (text: string): number => {

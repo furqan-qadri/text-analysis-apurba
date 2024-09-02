@@ -1,6 +1,5 @@
-// src/components/TextInput.tsx
 import { useState, ChangeEvent } from "react";
-import { AnalysisResult } from "../utils/types";
+import { AnalysisResultTypes } from "../utils/types";
 import {
   countWords,
   countCharacters,
@@ -11,12 +10,11 @@ import {
   findMostFrequentWord,
   analyzeSentiment,
 } from "../utils/analysisFunctions";
-import { exportToPDF } from "../utils/exportToPDF";
-import ResultBox from "./Analysis/ResultBox";
+import AnalysisResult from "./Analysis/AnalysisResult";
 
-function TextInput() {
+function TextAnalysis() {
   const [text, setText] = useState<string>("");
-  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
+  const [analysis, setAnalysis] = useState<AnalysisResultTypes | null>(null);
   const [error, setError] = useState<string>("");
 
   const handleTextInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -50,11 +48,6 @@ function TextInput() {
     });
   };
 
-  const handleExportToPDF = () => {
-    if (!analysis) return;
-    exportToPDF(text, analysis);
-  };
-
   return (
     <div className="flex flex-col gap-4 items-center w-full">
       {error && <div className="text-white text-2xl">{error}</div>}
@@ -76,56 +69,9 @@ function TextInput() {
         </span>
       </button>
 
-      {analysis && (
-        <div className="w-full xl:w-4/5 flex flex-col gap-2 items-center mt-5 p-3 border rounded xl:mt-10">
-          <span className="mb-3 text-lg xl:text-2xl text-white italic">
-            Here is an analysis of the given text
-          </span>
-          <div className="flex flex-col w-full xl:gap-4 xl:grid xl:grid-cols-4 gap-4">
-            <ResultBox
-              resultName="Word Count"
-              resultCount={analysis.wordCount}
-            />
-            <ResultBox
-              resultName="Characters (with space)"
-              resultCount={analysis.characterCount}
-            />
-            <ResultBox
-              resultName="Characters (without space)"
-              resultCount={analysis.characterCountNoSpaces}
-            />
-            <ResultBox
-              resultName="Sentences"
-              resultCount={analysis.sentenceCount}
-            />
-            <ResultBox
-              resultName="Paragraphs"
-              resultCount={analysis.paragraphCount}
-            />
-            <ResultBox
-              resultName="Longest word"
-              resultCount={analysis.longestWord}
-            />
-            <ResultBox
-              resultName="Most frequent word"
-              resultCount={analysis.mostFrequentWord[0]}
-            />
-            <ResultBox
-              resultName="Sentiment"
-              resultCount={analysis.sentiment}
-            />
-          </div>
-
-          <button
-            className="bg-white px-3 py-1 rounded-lg mt-6"
-            onClick={handleExportToPDF}
-          >
-            Export to PDF
-          </button>
-        </div>
-      )}
+      {analysis && <AnalysisResult analysis={analysis} text={text} />}
     </div>
   );
 }
 
-export default TextInput;
+export default TextAnalysis;

@@ -1,5 +1,5 @@
 // src/utils/types.ts
-export interface AnalysisResult {
+export interface AnalysisResultTypes {
   wordCount: number;
   characterCount: number;
   characterCountNoSpaces: number;
