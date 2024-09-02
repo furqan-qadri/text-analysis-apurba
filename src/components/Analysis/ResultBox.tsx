@@ -1,6 +1,6 @@
 interface ResultBoxProps {
   resultName: string;
-  resultCount: string;
+  resultCount: string | number;
 }
 
 function ResultBox({ resultName, resultCount }: ResultBoxProps) {

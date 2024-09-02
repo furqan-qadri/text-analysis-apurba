@@ -1,10 +1,22 @@
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import Sentiment from "sentiment";
 import ResultBox from "./Analysis/ResultBox";
 import jsPDF from "jspdf";
 
+// Type definitions
+interface AnalysisResult {
+  wordCount: number;
+  characterCount: number;
+  characterCountNoSpaces: number;
+  paragraphCount: number;
+  longestWord: string;
+  mostFrequentWord: [string, number];
+  sentenceCount: number;
+  sentiment: string;
+}
+
 // Function to count words in the text
-const countWords = (text) => {
+const countWords = (text: string): number => {
   let count = 0;
   let inWord = false;
 
@@ -23,33 +35,33 @@ const countWords = (text) => {
   return count;
 
   //  short regex approach for better readability. suitable for not very large texts
-  // const countWords = (text) => {
+  // const countWords = (text: string): number => {
   //     const matches = text.match(/\b\w+\b/g);
   //     return matches ? matches.length : 0;
   //   };
 };
 
 // Function to count characters, including spaces
-const countCharacters = (text) => {
+const countCharacters = (text: string): number => {
   return text.length;
 };
 
-const countSentences = (text) => {
+const countSentences = (text: string): number => {
   // Split text by sentence-ending punctuation followed by a space or end of string
   const sentences = text.split(/(?<=[.!?])\s+/);
   return sentences.filter((sentence) => sentence.trim().length > 0).length;
 };
 
-const countParagraphs = (text) => {
+const countParagraphs = (text: string): number => {
   return text.split(/\n\s*/).filter((paragraph) => paragraph.trim()).length;
 };
 
 // Function to count characters excluding spaces
-const countCharactersWithoutSpaces = (text) => {
+const countCharactersWithoutSpaces = (text: string): number => {
   return text.replace(/\s+/g, "").length;
 
   //   does not create a new string so is more memory efficient but due to the loop the performance would roughly be the same as the regex approach
-  // const countCharactersWithoutSpaces = (text) => {
+  // const countCharactersWithoutSpaces = (text: string): number => {
   //     let count = 0;
   //     for (let i = 0; i < text.length; i++) {
   //       if (!/\s/.test(text[i])) {
@@ -60,21 +72,23 @@ const countCharactersWithoutSpaces = (text) => {
   //   };
 };
 
-const findLongestWord = (text) => {
-  return text
-    .match(/\b\w+\b/g) // Match all words
-    .reduce((longest, current) => {
-      return current.length > longest.length ? current : longest;
-    }, "");
+const findLongestWord = (text: string): string => {
+  return (
+    text
+      .match(/\b\w+\b/g) // Match all words
+      ?.reduce((longest, current) => {
+        return current.length > longest.length ? current : longest;
+      }, "") || ""
+  );
 };
 
-const findMostFrequentWord = (text) => {
+const findMostFrequentWord = (text: string): [string, number] => {
   const words = text.toLowerCase().match(/\b\w+\b/g);
-  const wordCounts = new Map();
+  const wordCounts = new Map<string, number>();
   let mostFrequentWord = "";
   let maxCount = 0;
 
-  words.forEach((word) => {
+  words?.forEach((word) => {
     const count = (wordCounts.get(word) || 0) + 1;
     wordCounts.set(word, count);
 
@@ -87,7 +101,7 @@ const findMostFrequentWord = (text) => {
   return [mostFrequentWord, maxCount];
 };
 
-const analyzeSentiment = (text) => {
+const analyzeSentiment = (text: string): string => {
   const sentiment = new Sentiment();
   const result = sentiment.analyze(text);
 
@@ -104,15 +118,17 @@ const analyzeSentiment = (text) => {
 };
 
 function TextInput() {
-  const [text, setText] = useState("");
-  const [analysis, setAnalysis] = useState(null);
-  const [error, setError] = useState("");
+  const [text, setText] = useState<string>("");
+  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
+  const [error, setError] = useState<string>("");
 
-  const handleTextInputChange = (event) => {
+  const handleTextInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setText(event.target.value);
   };
 
   const handleExportToPDF = () => {
+    if (!analysis) return;
+
     const doc = new jsPDF();
 
     // Set document title with a larger font size and bold text
@@ -190,7 +206,7 @@ function TextInput() {
   };
 
   return (
-    <div className="flex flex-col gap-4 items-center">
+    <div className="flex flex-col gap-4 items-center w-full">
       {error && <div className="text-white text-2xl">{error}</div>}
       <textarea
         className="w-full xl:w-10/12 rounded-sm p-3 placeholder:text-base xl:placeholder:text-2xl"
