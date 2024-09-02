@@ -1,3 +1,4 @@
+import ResultBox from "./components/Analysis/ResultBox";
 import Header from "./components/Header";
 import TextInput from "./components/TextInput";
 

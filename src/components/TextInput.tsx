@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Sentiment from "sentiment";
+import ResultBox from "./Analysis/ResultBox";
 
 // Function to count words in the text
 const countWords = (text) => {
@@ -137,9 +138,9 @@ function TextInput() {
         className="w-full rounded-sm p-2"
         id="w3review"
         name="w3review"
-        rows={4}
+        rows={8}
         cols={50}
-        placeholder="enter text here"
+        placeholder="Type or paste text here"
         onChange={handleTextInputChange}
       ></textarea>
 
@@ -147,48 +148,44 @@ function TextInput() {
         onClick={handleAnalyseClick}
         className="relative inline-flex h-12 xl:h-16 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 w-2/5 xl:w-1/6"
       >
-        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+        <span className="absolute inset-[-2000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
         <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 px-8 py-1 text-lg xl:text-2xl font-medium text-gray-50 backdrop-blur-3xl">
           Analyse
         </span>
       </button>
 
       {analysis && (
-        <div
-          className="w-full"
-          style={{
-            marginTop: "20px",
-            border: "1px solid #ccc",
-            padding: "10px",
-          }}
-        >
-          <p>
-            <strong>Word Count:</strong> {analysis.wordCount}
-          </p>
-          <p>
-            <strong>Character Count (with spaces):</strong>{" "}
-            {analysis.characterCount}
-          </p>
-          <p>
-            <strong>Character Count (without spaces):</strong>{" "}
-            {analysis.characterCountNoSpaces}
-          </p>
-          <p>
-            <strong>Sentence count:</strong> {analysis.sentenceCount}
-          </p>
-          <p>
-            <strong>Paragraph count:</strong> {analysis.paragraphCount}
-          </p>
-          <p>
-            <strong>Longest word:</strong> {analysis.longestWord}
-          </p>
-          <p>
-            <strong>Most frequent word:</strong> {analysis.mostFrequentWord[0]}
-            {}" "{analysis.mostFrequentWord[1]} times
-          </p>
-          <p>
-            <strong>Sentiment</strong> {analysis.sentiment}
-          </p>
+        <div className="w-full flex flex-col gap-2 items-center mt-5 p-3">
+          <span className="mb-3 text-lg">
+            Here is an analysis of the given text
+          </span>
+          <ResultBox resultName="Word Count" resultCount={analysis.wordCount} />
+          <ResultBox
+            resultName="Characters (with space)"
+            resultCount={analysis.characterCount}
+          />
+          <ResultBox
+            resultName="Word Count"
+            resultCount={analysis.characterCountNoSpaces}
+          />
+          <ResultBox
+            resultName="Sentence count:"
+            resultCount={analysis.sentenceCount}
+          />
+          <ResultBox
+            resultName="Paragraph count:"
+            resultCount={analysis.paragraphCount}
+          />
+          <ResultBox
+            resultName="Longest word:"
+            resultCount={analysis.longestWord}
+          />
+          <ResultBox
+            resultName="Most frequent word:"
+            resultCount={analysis.mostFrequentWord[0]}
+            // {}" "{analysis.mostFrequentWord[1] + "} times
+          />
+          <ResultBox resultName="Sentiment" resultCount={analysis.sentiment} />
         </div>
       )}
     </div>
