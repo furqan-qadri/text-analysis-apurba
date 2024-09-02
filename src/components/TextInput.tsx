@@ -106,6 +106,7 @@ const analyzeSentiment = (text) => {
 function TextInput() {
   const [text, setText] = useState("");
   const [analysis, setAnalysis] = useState(null);
+  const [error, setError] = useState("");
 
   const handleTextInputChange = (event) => {
     setText(event.target.value);
@@ -162,6 +163,11 @@ function TextInput() {
   };
 
   const handleAnalyseClick = () => {
+    if (text.trim() === "") {
+      setError("⚠️ Please enter some text before analyzing.");
+      return;
+    }
+    setError("");
     const wordCount = countWords(text);
     const characterCount = countCharacters(text);
     const characterCountNoSpaces = countCharactersWithoutSpaces(text);
@@ -185,6 +191,7 @@ function TextInput() {
 
   return (
     <div className="flex flex-col gap-4 items-center">
+      {error && <div className="text-white text-2xl">{error}</div>}
       <textarea
         className="w-full xl:w-10/12 rounded-sm p-3 placeholder:text-base xl:placeholder:text-2xl"
         id="w3review"
@@ -206,37 +213,45 @@ function TextInput() {
       </button>
 
       {analysis && (
-        <div className="w-full flex flex-col xl:grid xl:grid-cols-4 gap-2 items-center mt-5 p-3 border rounded">
+        <div className="w-full xl:w-4/5 flex flex-col gap-2 items-center mt-5 p-3 border rounded xl:mt-10">
           <span className="mb-3 text-lg xl:text-2xl text-white italic">
             Here is an analysis of the given text
           </span>
-          <ResultBox resultName="Word Count" resultCount={analysis.wordCount} />
-          <ResultBox
-            resultName="Characters (with space)"
-            resultCount={analysis.characterCount}
-          />
-          <ResultBox
-            resultName="Characters (without space)"
-            resultCount={analysis.characterCountNoSpaces}
-          />
-          <ResultBox
-            resultName="Sentences"
-            resultCount={analysis.sentenceCount}
-          />
-          <ResultBox
-            resultName="Paragraphs"
-            resultCount={analysis.paragraphCount}
-          />
-          <ResultBox
-            resultName="Longest word"
-            resultCount={analysis.longestWord}
-          />
-          <ResultBox
-            resultName="Most frequent word"
-            resultCount={analysis.mostFrequentWord[0]}
-            // {}" "{analysis.mostFrequentWord[1] + "} times
-          />
-          <ResultBox resultName="Sentiment" resultCount={analysis.sentiment} />
+          <div className="flex flex-col w-full xl:gap-4 xl:grid xl:grid-cols-4 gap-4">
+            <ResultBox
+              resultName="Word Count"
+              resultCount={analysis.wordCount}
+            />
+            <ResultBox
+              resultName="Characters (with space)"
+              resultCount={analysis.characterCount}
+            />
+            <ResultBox
+              resultName="Characters (without space)"
+              resultCount={analysis.characterCountNoSpaces}
+            />
+            <ResultBox
+              resultName="Sentences"
+              resultCount={analysis.sentenceCount}
+            />
+            <ResultBox
+              resultName="Paragraphs"
+              resultCount={analysis.paragraphCount}
+            />
+            <ResultBox
+              resultName="Longest word"
+              resultCount={analysis.longestWord}
+            />
+            <ResultBox
+              resultName="Most frequent word"
+              resultCount={analysis.mostFrequentWord[0]}
+              // {}" "{analysis.mostFrequentWord[1] + "} times
+            />
+            <ResultBox
+              resultName="Sentiment"
+              resultCount={analysis.sentiment}
+            />
+          </div>
 
           <button
             className="bg-white px-3 py-1 rounded-lg mt-6"
