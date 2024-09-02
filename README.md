@@ -9,47 +9,67 @@ The Text Analysis Application developed for Apurba is a powerful tool designed t
 ## 📸 Screenshots
 
 ### Desktop View
-![Desktop Screenshot](link-to-desktop-screenshot) <!-- Replace this with the actual image link -->
+
+![Desktop Screenshot](public/apurba_desktop.jpg)
 
 ### Mobile View
-![Mobile Screenshot](link-to-mobile-screenshot) <!-- Replace this with the actual image link -->
+
+<p align="center">
+  <img src="public/apurba_phone_1.png" alt="Mobile Screenshot 1" width="45%"/>
+  <img src="public/apurba_phone_2.png" alt="Mobile Screenshot 2" width="45%"/>
+</p>
 
 ## 🚀 How to Run Locally
 
 ### Using npm
 
 1. **Clone the repository:**
+
    ```bash
-   git clone https://github.com/your-username/text-analysis-app.git
+   git clone https://github.com/furqan-qadri/text-analysis-apurba
    cd text-analysis-app
 
+   ```
+
 2. **Install dependencies:**
+
    ```bash
    npm install
 
+   ```
+
 3. **Start the development server:**
+
    ```bash
    npm run dev
+
+   ```
 
 4. **Open your browser and navigate to:**
    ```bash
    http://localhost:5173
+   ```
 
 ## ⛴️ Using Docker
 
-
 1. **Build the image**
+
    ```bash
-   docker build -t apurba-text-analysis .  
+   docker build -t apurba-text-analysis .
+
+   ```
 
 2. **Run the Docker container:**
+
    ```bash
    docker run -p 8080:80 text-analysis-apurba
 
-4. **Open your browser and navigate to:**
+   ```
+
+3. **Open your browser and navigate to:**
    ```bash
    http://localhost:8080
-
+   ```
 
 ## 🛠️ Techniques Used
 
