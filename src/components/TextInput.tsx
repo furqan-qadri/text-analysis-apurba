@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Sentiment from "sentiment";
 import ResultBox from "./Analysis/ResultBox";
+import jsPDF from "jspdf";
 
 // Function to count words in the text
 const countWords = (text) => {
@@ -110,6 +111,56 @@ function TextInput() {
     setText(event.target.value);
   };
 
+  const handleExportToPDF = () => {
+    const doc = new jsPDF();
+
+    // Set document title with a larger font size and bold text
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("Text Analysis Result", 10, 15);
+
+    // Add a line break after the title
+    doc.setLineWidth(0.5);
+    doc.line(10, 20, 200, 20);
+
+    // Set font for the rest of the content
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+
+    // Original Text
+    doc.text("Original Text:", 10, 30);
+    doc.setFont("helvetica", "italic");
+    doc.text(text, 10, 40);
+
+    // Add a line break after the original text
+    doc.line(10, 50, 200, 50);
+
+    // Analysis Section
+    doc.setFont("helvetica", "bold");
+    doc.text("Analysis:", 10, 60);
+    doc.setFont("helvetica", "normal");
+
+    doc.text(`Total words: ${analysis.wordCount}`, 10, 70);
+    doc.text(
+      `Character Count (with spaces): ${analysis.characterCount}`,
+      10,
+      80
+    );
+    doc.text(
+      `Character Count (without spaces): ${analysis.characterCountNoSpaces}`,
+      10,
+      90
+    );
+    doc.text(`Sentences: ${analysis.sentenceCount}`, 10, 100);
+    doc.text(`Paragraphs: ${analysis.paragraphCount}`, 10, 110);
+    doc.text(`Longest word: ${analysis.longestWord}`, 10, 120);
+    doc.text(`Most frequent word: ${analysis.mostFrequentWord[0]}`, 10, 130);
+    doc.text(`Sentiment: ${analysis.sentiment}`, 10, 140);
+
+    // Save the PDF with a descriptive filename
+    doc.save("Text_Analysis_Result.pdf");
+  };
+
   const handleAnalyseClick = () => {
     const wordCount = countWords(text);
     const characterCount = countCharacters(text);
@@ -135,7 +186,7 @@ function TextInput() {
   return (
     <div className="flex flex-col gap-4 items-center">
       <textarea
-        className="w-full rounded-sm p-2"
+        className="w-full xl:w-10/12 rounded-sm p-3 placeholder:text-base xl:placeholder:text-2xl"
         id="w3review"
         name="w3review"
         rows={11}
@@ -155,8 +206,8 @@ function TextInput() {
       </button>
 
       {analysis && (
-        <div className="w-full flex flex-col gap-2 items-center mt-5 p-3">
-          <span className="mb-3 text-lg">
+        <div className="w-full flex flex-col xl:grid xl:grid-cols-4 gap-2 items-center mt-5 p-3 border rounded">
+          <span className="mb-3 text-lg xl:text-2xl text-white italic">
             Here is an analysis of the given text
           </span>
           <ResultBox resultName="Word Count" resultCount={analysis.wordCount} />
@@ -165,27 +216,34 @@ function TextInput() {
             resultCount={analysis.characterCount}
           />
           <ResultBox
-            resultName="Word Count"
+            resultName="Characters (without space)"
             resultCount={analysis.characterCountNoSpaces}
           />
           <ResultBox
-            resultName="Sentence count:"
+            resultName="Sentences"
             resultCount={analysis.sentenceCount}
           />
           <ResultBox
-            resultName="Paragraph count:"
+            resultName="Paragraphs"
             resultCount={analysis.paragraphCount}
           />
           <ResultBox
-            resultName="Longest word:"
+            resultName="Longest word"
             resultCount={analysis.longestWord}
           />
           <ResultBox
-            resultName="Most frequent word:"
+            resultName="Most frequent word"
             resultCount={analysis.mostFrequentWord[0]}
             // {}" "{analysis.mostFrequentWord[1] + "} times
           />
           <ResultBox resultName="Sentiment" resultCount={analysis.sentiment} />
+
+          <button
+            className="bg-white px-3 py-1 rounded-lg mt-6"
+            onClick={handleExportToPDF}
+          >
+            Export to PDF
+          </button>
         </div>
       )}
     </div>
