@@ -1,121 +1,18 @@
+// src/components/TextInput.tsx
 import { useState, ChangeEvent } from "react";
-import Sentiment from "sentiment";
+import { AnalysisResult } from "../utils/types";
+import {
+  countWords,
+  countCharacters,
+  countCharactersWithoutSpaces,
+  countSentences,
+  countParagraphs,
+  findLongestWord,
+  findMostFrequentWord,
+  analyzeSentiment,
+} from "../utils/analysisFunctions";
+import { exportToPDF } from "../utils/exportToPDF";
 import ResultBox from "./Analysis/ResultBox";
-import jsPDF from "jspdf";
-
-// Type definitions
-interface AnalysisResult {
-  wordCount: number;
-  characterCount: number;
-  characterCountNoSpaces: number;
-  paragraphCount: number;
-  longestWord: string;
-  mostFrequentWord: [string, number];
-  sentenceCount: number;
-  sentiment: string;
-}
-
-// Function to count words in the text
-const countWords = (text: string): number => {
-  let count = 0;
-  let inWord = false;
-
-  for (let i = 0; i < text.length; i++) {
-    if (/\S/.test(text[i])) {
-      // Any non-whitespace character
-      if (!inWord) {
-        count++;
-        inWord = true;
-      }
-    } else {
-      inWord = false;
-    }
-  }
-
-  return count;
-
-  //  short regex approach for better readability. suitable for not very large texts
-  // const countWords = (text: string): number => {
-  //     const matches = text.match(/\b\w+\b/g);
-  //     return matches ? matches.length : 0;
-  //   };
-};
-
-// Function to count characters, including spaces
-const countCharacters = (text: string): number => {
-  return text.length;
-};
-
-const countSentences = (text: string): number => {
-  // Split text by sentence-ending punctuation followed by a space or end of string
-  const sentences = text.split(/(?<=[.!?])\s+/);
-  return sentences.filter((sentence) => sentence.trim().length > 0).length;
-};
-
-const countParagraphs = (text: string): number => {
-  return text.split(/\n\s*/).filter((paragraph) => paragraph.trim()).length;
-};
-
-// Function to count characters excluding spaces
-const countCharactersWithoutSpaces = (text: string): number => {
-  return text.replace(/\s+/g, "").length;
-
-  //   does not create a new string so is more memory efficient but due to the loop the performance would roughly be the same as the regex approach
-  // const countCharactersWithoutSpaces = (text: string): number => {
-  //     let count = 0;
-  //     for (let i = 0; i < text.length; i++) {
-  //       if (!/\s/.test(text[i])) {
-  //         count++;
-  //       }
-  //     }
-  //     return count;
-  //   };
-};
-
-const findLongestWord = (text: string): string => {
-  return (
-    text
-      .match(/\b\w+\b/g) // Match all words
-      ?.reduce((longest, current) => {
-        return current.length > longest.length ? current : longest;
-      }, "") || ""
-  );
-};
-
-const findMostFrequentWord = (text: string): [string, number] => {
-  const words = text.toLowerCase().match(/\b\w+\b/g);
-  const wordCounts = new Map<string, number>();
-  let mostFrequentWord = "";
-  let maxCount = 0;
-
-  words?.forEach((word) => {
-    const count = (wordCounts.get(word) || 0) + 1;
-    wordCounts.set(word, count);
-
-    if (count > maxCount) {
-      mostFrequentWord = word;
-      maxCount = count;
-    }
-  });
-
-  return [mostFrequentWord, maxCount];
-};
-
-const analyzeSentiment = (text: string): string => {
-  const sentiment = new Sentiment();
-  const result = sentiment.analyze(text);
-
-  let sentimentLabel = "Neutral";
-  console.log(result);
-
-  if (result.score > 0) {
-    sentimentLabel = "Positive";
-  } else if (result.score < 0) {
-    sentimentLabel = "Negative";
-  }
-
-  return sentimentLabel;
-};
 
 function TextInput() {
   const [text, setText] = useState<string>("");
@@ -124,58 +21,6 @@ function TextInput() {
 
   const handleTextInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setText(event.target.value);
-  };
-
-  const handleExportToPDF = () => {
-    if (!analysis) return;
-
-    const doc = new jsPDF();
-
-    // Set document title with a larger font size and bold text
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "bold");
-    doc.text("Text Analysis Result", 10, 15);
-
-    // Add a line break after the title
-    doc.setLineWidth(0.5);
-    doc.line(10, 20, 200, 20);
-
-    // Set font for the rest of the content
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-
-    // Original Text
-    doc.text("Original Text:", 10, 30);
-    doc.setFont("helvetica", "italic");
-    doc.text(text, 10, 40);
-
-    // Add a line break after the original text
-    doc.line(10, 50, 200, 50);
-
-    // Analysis Section
-    doc.setFont("helvetica", "bold");
-    doc.text("Analysis:", 10, 60);
-    doc.setFont("helvetica", "normal");
-
-    doc.text(`Total words: ${analysis.wordCount}`, 10, 70);
-    doc.text(
-      `Character Count (with spaces): ${analysis.characterCount}`,
-      10,
-      80
-    );
-    doc.text(
-      `Character Count (without spaces): ${analysis.characterCountNoSpaces}`,
-      10,
-      90
-    );
-    doc.text(`Sentences: ${analysis.sentenceCount}`, 10, 100);
-    doc.text(`Paragraphs: ${analysis.paragraphCount}`, 10, 110);
-    doc.text(`Longest word: ${analysis.longestWord}`, 10, 120);
-    doc.text(`Most frequent word: ${analysis.mostFrequentWord[0]}`, 10, 130);
-    doc.text(`Sentiment: ${analysis.sentiment}`, 10, 140);
-
-    // Save the PDF with a descriptive filename
-    doc.save("Text_Analysis_Result.pdf");
   };
 
   const handleAnalyseClick = () => {
@@ -205,13 +50,16 @@ function TextInput() {
     });
   };
 
+  const handleExportToPDF = () => {
+    if (!analysis) return;
+    exportToPDF(text, analysis);
+  };
+
   return (
     <div className="flex flex-col gap-4 items-center w-full">
       {error && <div className="text-white text-2xl">{error}</div>}
       <textarea
         className="w-full xl:w-10/12 rounded-sm p-3 placeholder:text-base xl:placeholder:text-2xl"
-        id="w3review"
-        name="w3review"
         rows={11}
         cols={50}
         placeholder="Type or paste text here"
@@ -261,7 +109,6 @@ function TextInput() {
             <ResultBox
               resultName="Most frequent word"
               resultCount={analysis.mostFrequentWord[0]}
-              // {}" "{analysis.mostFrequentWord[1] + "} times
             />
             <ResultBox
               resultName="Sentiment"
